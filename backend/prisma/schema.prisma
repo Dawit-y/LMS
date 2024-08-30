@@ -10,11 +10,90 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  firstName  String?
-  lastName    String?
+  id          String       @id @default(uuid())
+  email       String       @unique
+  password    String
+  firstName   String
+  lastName    String
+  role        String       @default("student")
+  creator     Creator?
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  enrollments Enrollment[]
 
+  @@map("users")
+}
+
+model Creator {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @unique @map("user_id")
+  type        String   @default("personal")
+  companyName String?  @map("company_name")
+  address     String?
+  phone       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("creators")
+}
+
+model Course {
+  id          String       @id @default(uuid())
+  name        String
+  enrollments Enrollment[]
+  modules     Module[]
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  @@map("courses")
+}
+
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  studentId String
+  courseId  String
+  student   User     @relation(fields: [studentId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+  status    Status?  @relation(fields: [statusId], references: [id])
+  statusId  Int?
+
+  @@unique([studentId, courseId])
+  @@map("enrollments")
+}
+
+model Module {
+  id        String   @id @default(uuid())
+  name      String
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+  lessons   Lesson[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("modules")
+}
+
+model Lesson {
+  id        String   @id @default(uuid())
+  name      String
+  text      String
+  file      String?
+  url       String?
+  module    Module   @relation(fields: [moduleId], references: [id])
+  moduleId  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("lessons")
+}
+
+model Status {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique @default("pending")
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
 }
