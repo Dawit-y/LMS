@@ -1,28 +1,28 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Signup from "./pages/Signup";
 
 function App() {
-  const [users, setUsers] = useState(null);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/users");
-        setUsers(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUsers();
-  }, []);
-
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<Outlet />}>
+        <Route index element={<Home />} />
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Signup />} />
+      </Route>
+    )
+  );
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      {users?.map((user) => (
-        <div className="text-xl" key={user.id}>
-          {user.firstName}
-        </div>
-      ))}
+      <RouterProvider router={router} />
     </>
   );
 }

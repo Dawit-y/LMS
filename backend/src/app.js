@@ -5,6 +5,7 @@ import cors from "cors";
 
 import userRouter from "./routes/userRoute.js";
 import authRouter from "./routes/authRoute.js";
+import { requireAuth } from "./middlewares/authMiddleware.js";
 
 const app = express();
 const SQLiteStore = connectSQLite3(session);
