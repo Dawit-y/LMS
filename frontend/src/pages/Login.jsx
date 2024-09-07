@@ -1,25 +1,23 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
+  const { error, login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:8000/login", {
-        email,
-        password,
-      });
-
-      if (response.status === 200) {
-        console.log("Login successful");
+      const res = await login(email, password);
+      if (res === "success") {
+        navigate("/");
       }
-    } catch (err) {
-      setError("Invalid email or password");
+    } catch (error) {
+      console.error("Login failed:", error);
     }
   };
 
@@ -99,9 +97,8 @@ const Login = () => {
             </button>
           </div>
         </form>
-
-        {error && <p className="mt-4 text-red-500 text-center">{error}</p>} {/* Display login error */}
-
+        {error && <p className="mt-4 text-red-500 text-center">{error}</p>}{" "}
+        {/* Display login error */}
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?
           <Link

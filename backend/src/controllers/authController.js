@@ -6,10 +6,13 @@ export const login = async (req, res) => {
     const user = await authenticateUser(email, password);
     if (user) {
       req.session.userId = user.id;
-      res.status(200).send("Login succussful");
+      const { password: _, ...userWithoutPassword } = user;
+      res.status(200).send(userWithoutPassword);
+    } else {
+      res.status(401).send("Invalid email or password");
     }
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send("An error occured during login");
   }
 };
 
