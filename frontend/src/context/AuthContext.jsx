@@ -1,5 +1,5 @@
-import { useState, createContext } from "react";
-import axios from "axios";
+import { useState, createContext, useEffect } from "react";
+import axios from "../api/api";
 
 const AuthContext = createContext({});
 
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/login", {
+      const response = await axios.post("login", {
         email,
         password,
       });
@@ -26,11 +26,12 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/logout");
+      const response = await axios.post("logout");
 
       if (response.status === 200) {
         console.log("Logout successful");
         setUser(null);
+        setError(null);
       }
     } catch (err) {
       console.log("error in logout");
@@ -39,8 +40,23 @@ export const AuthProvider = ({ children }) => {
 
   const register = async () => {};
 
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await axios.get("check-session");
+        if (response.status === 200) {
+          setUser(response.data);
+        }
+      } catch (err) {
+        console.log("No active session");
+      }
+    };
+
+    checkSession();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, error, login, logout, register }}>
+    <AuthContext.Provider value={{ user, error, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

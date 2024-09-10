@@ -1,132 +1,183 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/api";
+import useAuth from "../hooks/useAuth";
 
 const Signup = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(null); // To handle errors
+  const [loading, setLoading] = useState(false); // To handle loading state
+  const navigate = useNavigate();
+
+  const { setUser } = useAuth();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Send the signup request to the /users API
+      const response = await axios.post("users", {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+
+      // On successful signup, navigate to the login page
+      if (response.status === 200) {
+        setUser(response.data);
+        navigate("/");
+      }
+    } catch (err) {
+      setError("Signup failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
-          class="mx-auto h-10 w-auto"
+          className="mx-auto h-10 w-auto"
           src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
           alt="Your Company"
         />
-        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Create your account
         </h2>
       </div>
 
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" action="#" method="POST">
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label
-              for="firstName"
-              class="block text-sm font-medium leading-6 text-gray-900"
+              htmlFor="firstName"
+              className="block text-sm font-medium leading-6 text-gray-900"
             >
               First Name
             </label>
-            <div class="mt-2">
+            <div className="mt-2">
               <input
                 id="firstName"
                 name="firstName"
                 type="text"
-                autocomplete="firstName"
                 required
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
           <div>
             <label
-              for="lastName"
-              class="block text-sm font-medium leading-6 text-gray-900"
+              htmlFor="lastName"
+              className="block text-sm font-medium leading-6 text-gray-900"
             >
               Last Name
             </label>
-            <div class="mt-2">
+            <div className="mt-2">
               <input
                 id="lastName"
                 name="lastName"
                 type="text"
-                autocomplete="lastName"
                 required
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
           <div>
             <label
-              for="email"
-              class="block text-sm font-medium leading-6 text-gray-900"
+              htmlFor="email"
+              className="block text-sm font-medium leading-6 text-gray-900"
             >
               Email address
             </label>
-            <div class="mt-2">
+            <div className="mt-2">
               <input
                 id="email"
                 name="email"
                 type="email"
-                autocomplete="email"
                 required
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
 
           <div>
-            <div class="flex items-center justify-between">
-              <label
-                for="password"
-                class="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Password
-              </label>
-            </div>
-            <div class="mt-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Password
+            </label>
+            <div className="mt-2">
               <input
                 id="password"
                 name="password"
                 type="password"
-                autocomplete="current-password"
                 required
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
           <div>
-            <div class="flex items-center justify-between">
-              <label
-                for="confirmpassword"
-                class="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Confirm Password
-              </label>
-            </div>
-            <div class="mt-2">
+            <label
+              htmlFor="confirmpassword"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Confirm Password
+            </label>
+            <div className="mt-2">
               <input
                 id="confirmpassword"
                 name="confirmpassword"
                 type="password"
                 required
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
 
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+
           <div>
             <button
               type="submit"
-              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={loading}
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 p-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign Up
+              {loading ? "Signing up..." : "Sign Up"}
             </button>
           </div>
         </form>
 
-        <p class="mt-10 text-center text-sm text-gray-500">
+        <p className="mt-10 text-center text-sm text-gray-500">
           Have an account?
           <Link
-            to={"/login"}
-            class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+            to="/login"
+            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
             Login
           </Link>
