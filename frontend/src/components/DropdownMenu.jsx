@@ -1,13 +1,18 @@
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 
-const Profile = () => {
+const DropdownMenu = () => {
   const { user, logout } = useAuth();
-  console.log(user);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const toggleDropdown = () => setIsExpanded(!isExpanded);
+
   return (
     <div className="relative font-[sans-serif] w-max mx-auto">
       <button
         type="button"
         id="dropdownToggle"
+        onClick={toggleDropdown}
         className="px-4 py-2 flex items-center rounded-full text-[#333] text-sm border border-gray-300 outline-none hover:bg-gray-100"
       >
         <img
@@ -31,7 +36,9 @@ const Profile = () => {
 
       <ul
         id="dropdownMenu"
-        className="absolute block shadow-lg bg-white py-2 z-[1000] min-w-full w-max rounded-lg max-h-96 overflow-auto"
+        className={`absolute ${
+          isExpanded ? "block" : "hidden"
+        } shadow-lg bg-white py-2 z-[1000] min-w-full w-max rounded-lg max-h-96 overflow-auto`}
       >
         <li className="py-2.5 px-5 flex items-center hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
           <svg
@@ -45,7 +52,7 @@ const Profile = () => {
               data-original="#000000"
             ></path>
           </svg>
-          View profile
+          <Link to="profile"> View profile</Link>
         </li>
         <li className="py-2.5 px-5 flex items-center hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
           <svg
@@ -59,10 +66,11 @@ const Profile = () => {
               data-original="#000000"
             ></path>
           </svg>
-          Dashboard
+          <Link to="dashboard">Dashboard</Link>
         </li>
-        <button onClick={logout}>
-          <li className="py-2.5 px-5 flex items-center hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
+
+        <li className="py-2.5 px-5 flex items-center hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
+          <button onClick={logout} className="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -74,12 +82,12 @@ const Profile = () => {
                 data-original="#000000"
               ></path>
             </svg>
-            Logout
-          </li>
-        </button>
+            <span>Logout</span>
+          </button>
+        </li>
       </ul>
     </div>
   );
 };
 
-export default Profile;
+export default DropdownMenu;
