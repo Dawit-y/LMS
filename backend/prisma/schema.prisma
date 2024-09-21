@@ -54,6 +54,8 @@ model Creator {
 model Course {
   id          String       @id @default(uuid())
   name        String
+  image       String?
+  description String
   enrollments Enrollment[]
   modules     Module[]
   createdAt   DateTime     @default(now()) @map("created_at")
