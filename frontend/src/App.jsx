@@ -16,6 +16,7 @@ import LearnDashbaord from "./pages/LearnDashboard";
 import CreatorDashboard from "./pages/CreatorDashboard";
 import { AuthProvider } from "./context/AuthContext";
 import CourseDetail from "./pages/CourseDetail";
+import CourseList from "./pages/CourseList";
 
 function App() {
   const router = createBrowserRouter(
@@ -24,9 +25,12 @@ function App() {
         <Route path="/" element={<HomeLayout />}>
           <Route index element={<Home />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="learn" element={<Outlet />}>
-            <Route index element={<LearnDashbaord />} />
-            <Route path=":id" element={<CourseDetail />} />
+          <Route path="courses" element={<Outlet />}>
+            <Route index element={<CourseList />} />
+            <Route path=":id" element={<Outlet />}>
+              <Route index element={<CourseDetail />} />
+              <Route path="learn" element={<LearnDashbaord />} />
+            </Route>
           </Route>
           <Route path="create" element={<CreatorDashboard />} />
         </Route>

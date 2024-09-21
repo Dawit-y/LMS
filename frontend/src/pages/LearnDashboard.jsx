@@ -1,188 +1,88 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const LearnDashbaord = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleLessons = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <>
-      <div className="mt-16 bg-white h-screen">
-        <div className="px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center ">
-          <h1 className="text-4xl font-light text-black mx-auto mt-3">
-            All Courses
-          </h1>
-          <div class="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16">
-            <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-10">
-              <div class="rounded overflow-hidden shadow-lg">
-                <a href="#"></a>
-                <div class="relative">
-                  <a href="#">
-                    <img
-                      class="w-full"
-                      src="https://images.pexels.com/photos/196667/pexels-photo-196667.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                      alt="Sunset in the mountains"
-                    />
-                    <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-                  </a>
-
-                  <a href="!#">
-                    <div class="text-sm absolute top-0 right-0 bg-indigo-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      <span class="font-bold">27</span>
-                      <small>March</small>
-                    </div>
-                  </a>
-                </div>
-                <div class="px-6 py-4">
-                  <Link
-                    to="123"
-                    class="font-semibold text-lg inline-block text-pink-800"
-                  >
-                    Best View in Newyork City
-                  </Link>
-                  <p class="text-gray-500 text-sm">
-                    The city that never sleeps
-                  </p>
-                </div>
-                <div class="px-6 py-4 flex flex-row items-center">
-                  <span
-                    href="#"
-                    class="py-1 text-sm font-regular text-gray-900 mr-1 flex flex-row items-center"
-                  >
-                    <svg
-                      height="13px"
-                      width="13px"
-                      version="1.1"
-                      id="Layer_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 512 512"
-                      xml:space="preserve"
+      <div class="mt-24">
+        <div class="mx-auto max-w-screen-xl px-2 pb-6 sm:px-6 lg:px-4 lg:pb-16">
+          <div className="mb-4">
+            <h1 className="text-4xl font-bold text-gray-600">
+              Machine Learning
+            </h1>
+          </div>
+          <div class="overflow-hidden rounded-lg bg-white shadow-lg border border-t-gray-200">
+            <div class="divide-y divide-gray-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x">
+              <aside class="py-6 lg:col-span-3">
+                <div class="space-y-1">
+                  <div>
+                    <div
+                      className="bg-teal-50 border-teal-500 text-teal-700 hover:bg-teal-50 hover:text-teal-700 group border-l-4 px-3 py-2 flex items-center justify-between text-sm font-medium cursor-pointer"
+                      onClick={toggleLessons}
                     >
-                      <g>
-                        <g>
+                      <span className="truncate">Module 1</span>
+                      {isOpen ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
                           <path
-                            d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256
-			c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128
-			c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"
-                          ></path>
-                        </g>
-                      </g>
-                    </svg>
-                    <span class="ml-1">6 mins ago</span>
-                  </span>
-                </div>
-              </div>
-              <div class="rounded overflow-hidden shadow-lg">
-                <a href="#"></a>
-                <div class="relative">
-                  <a href="#">
-                    <img
-                      class="w-full"
-                      src="https://images.pexels.com/photos/1653877/pexels-photo-1653877.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                      alt="Sunset in the mountains"
-                    />
-                    <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-                  </a>
-
-                  <a href="!#">
-                    <div class="text-sm absolute top-0 right-0 bg-indigo-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      <span class="font-bold">20</span>
-                      <small>March</small>
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                          />
+                        </svg>
+                      )}
                     </div>
-                  </a>
-                </div>
-                <div class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-semibold text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out"
-                  >
-                    Best Pizza in Town
-                  </a>
-                  <p class="text-gray-500 text-sm">
-                    The collection of best pizza images in Newyork city
-                  </p>
-                </div>
-                <div class="px-6 py-4 flex flex-row items-center">
-                  <span
-                    href="#"
-                    class="py-1 text-sm font-regular text-gray-900 mr-1 flex flex-row justify-between items-center"
-                  >
-                    <svg
-                      height="13px"
-                      width="13px"
-                      version="1.1"
-                      id="Layer_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 512 512"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"></path>
-                        </g>
-                      </g>
-                    </svg>
-                    <span class="ml-1">3 mins read</span>
-                  </span>
-                </div>
-              </div>
-              <div class="rounded overflow-hidden shadow-lg">
-                <a href="#"></a>
-                <div class="relative">
-                  <a href="#">
-                    <img
-                      class="w-full"
-                      src="https://images.pexels.com/photos/257816/pexels-photo-257816.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                      alt="Sunset in the mountains"
-                    />
-                    <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-                  </a>
 
-                  <a href="!#">
-                    <div class="text-sm absolute top-0 right-0 bg-indigo-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      <span class="font-bold">15</span>
-                      <small>April</small>
-                    </div>
-                  </a>
+                    {/* Lessons List */}
+                    {isOpen && (
+                      <ul className="pl-6 mt-2 space-y-2 transition-all duration-300 ease-in-out overflow-hidden">
+                        <li className="text-sm text-gray-700">Lesson 1</li>
+                        <li className="text-sm text-gray-700">Lesson 2</li>
+                        <li className="text-sm text-gray-700">Lesson 3</li>
+                        <li className="text-sm text-gray-700">Lesson 4</li>
+                        <li className="text-sm text-gray-700">Lesson 5</li>
+                        <li className="text-sm text-gray-700">Lesson 6</li>
+                      </ul>
+                    )}
+                  </div>
                 </div>
-                <div class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-semibold text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out"
-                  >
-                    Best Salad Images ever
-                  </a>
-                  <p class="text-gray-500 text-sm">
-                    The collection of best salads of town in pictures
-                  </p>
-                </div>
-                <div class="px-6 py-4 flex flex-row items-center">
-                  <span
-                    href="#"
-                    class="py-1 text-sm font-regular text-gray-900 mr-1 flex flex-row justify-between items-center"
-                  >
-                    <svg
-                      height="13px"
-                      width="13px"
-                      version="1.1"
-                      id="Layer_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 512 512"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"></path>
-                        </g>
-                      </g>
-                    </svg>
-                    <span class="ml-1">6 mins read</span>
-                  </span>
+              </aside>
+
+              <div class="divide-y divide-gray-200 lg:col-span-9">
+                <div class="py-6 px-4 sm:p-6 lg:pb-8">
+                  <div>
+                    <h2 class="text-lg font-medium leading-6 text-gray-900">
+                      Lesson 1 Title
+                    </h2>
+                    <p class="mt-1 text-sm text-gray-500">
+                      Content of lesson one
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

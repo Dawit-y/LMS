@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const CourseDetail = () => {
   return (
@@ -18,9 +19,11 @@ const CourseDetail = () => {
                   </div>
                   <div class="flex -mx-2 mb-4">
                     <div class="w-1/2 px-2">
-                      <button class="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">
-                        Enroll
-                      </button>
+                      <Link to="learn">
+                        <button class="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">
+                          Enroll
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
