@@ -3,6 +3,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
+  Outlet,
 } from "react-router-dom";
 import "./App.css";
 
@@ -14,6 +15,7 @@ import Profile from "./pages/Profile";
 import LearnDashbaord from "./pages/LearnDashboard";
 import CreatorDashboard from "./pages/CreatorDashboard";
 import { AuthProvider } from "./context/AuthContext";
+import CourseDetail from "./pages/CourseDetail";
 
 function App() {
   const router = createBrowserRouter(
@@ -22,7 +24,10 @@ function App() {
         <Route path="/" element={<HomeLayout />}>
           <Route index element={<Home />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="learn" element={<LearnDashbaord />} />
+          <Route path="learn" element={<Outlet />}>
+            <Route index element={<LearnDashbaord />} />
+            <Route path=":id" element={<CourseDetail />} />
+          </Route>
           <Route path="create" element={<CreatorDashboard />} />
         </Route>
         <Route path="login" element={<Login />} />
