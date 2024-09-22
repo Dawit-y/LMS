@@ -5,6 +5,8 @@ import cors from "cors";
 
 import userRouter from "./routes/userRoute.js";
 import authRouter from "./routes/authRoute.js";
+import courseRouter from "./routes/courseRoutes.js";
+import enrollmentRouter from "./routes/enrollmentsRoute.js";
 import { requireAuth } from "./middlewares/authMiddleware.js";
 
 const app = express();
@@ -34,5 +36,7 @@ app.use(
 //Routes
 app.use(userRouter);
 app.use(authRouter);
+app.use(courseRouter);
+app.use(enrollmentRouter);
 
 export default app;

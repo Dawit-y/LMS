@@ -106,7 +106,7 @@ model Lesson {
 
 model Status {
   id          Int          @id @default(autoincrement())
-  name        String       @unique @default("pending")
+  name        String       @default("pending")
   enrollments Enrollment[]
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
