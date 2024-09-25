@@ -139,12 +139,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <a
-        href="https://www.freepik.com/free-photos-vectors/background"
-        class="text-gray-500"
-      >
-        Background vector created by freepik - www.freepik.com
-      </a>
     </footer>
   );
 };
