@@ -45,6 +45,7 @@ model Creator {
   companyName String?  @map("company_name")
   address     String?
   phone       String?
+  courses     Course[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -60,6 +61,8 @@ model Course {
   modules     Module[]
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
+  creator     Creator?     @relation(fields: [creatorId], references: [id])
+  creatorId   String?
 
   @@map("courses")
 }

@@ -17,7 +17,7 @@ export const login = async (req, res) => {
       const { password: _, ...userWithoutPassword } = user;
       res.status(200).send(userWithoutPassword);
     } else {
-      res.status(401).send("Invalid email or password");
+      res.status(400).send("Invalid email or password");
     }
   } catch (error) {
     res.status(500).send("An error occured during login");

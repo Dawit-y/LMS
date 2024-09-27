@@ -24,6 +24,11 @@ export const getEnrollmentController = async (req, res) => {
 export const createEnrollmentController = async (req, res) => {
   try {
     const { courseId, studentId } = req.body;
+    if (!(courseId && studentId)) {
+      return res
+        .status(400)
+        .json({ message: "course and student ID not found" });
+    }
     const status = await createStatus("pending");
 
     const enrollment = await createEnrollment({
