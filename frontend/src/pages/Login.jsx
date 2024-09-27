@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { useMutation } from "@tanstack/react-query";
 
 const Login = () => {
-  const { error, login } = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-
+  const {
+    mutateAsync: loginMutation,
+    isPending,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: login,
+    mutationKey: ["login"],
+  });
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const res = await login(email, password);
+      const res = await loginMutation({ email, password });
       if (res === "success") {
         navigate("/");
       }
@@ -91,13 +100,15 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className={`flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+                isPending ? "disabled" : ""
+              }`}
             >
-              Sign in
+              {isPending ? "Logging in..." : "Log in"}
             </button>
           </div>
         </form>
-        {error && <p className="mt-4 text-red-500 text-center">{error}</p>}{" "}
+        {isError && <p className="mt-4 text-red-500 text-center">{error}</p>}{" "}
         {/* Display login error */}
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?

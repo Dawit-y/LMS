@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
 
-  const login = async (email, password) => {
+  const login = async ({ email, password }) => {
     try {
       const response = await axios.post("login", {
         email,

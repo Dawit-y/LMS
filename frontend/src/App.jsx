@@ -5,6 +5,7 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
 
 import HomeLayout from "./layouts/HomeLayout";
@@ -17,12 +18,19 @@ import CreatorDashboard from "./pages/CreatorDashboard";
 import { AuthProvider } from "./context/AuthContext";
 import CourseDetail from "./pages/CourseDetail";
 import CourseList from "./pages/CourseList";
+import ErrorElement from "./pages/ErrorElement";
+
+const queryClient = new QueryClient();
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<HomeLayout />}>
+        <Route
+          path="/"
+          element={<HomeLayout />}
+          errorElement={<ErrorElement />}
+        >
           <Route index element={<Home />} />
           <Route path="profile" element={<Profile />} />
           <Route path="courses" element={<Outlet />}>
@@ -41,9 +49,11 @@ function App() {
   );
   return (
     <>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </QueryClientProvider>
     </>
   );
 }
