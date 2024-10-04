@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,14 +64,14 @@ const Dropdown = () => {
 };
 
 const LearnDashbaord = () => {
+  const location = useLocation();
+  const course = location.state.course;
   return (
     <>
       <div class="mt-24">
         <div class="mx-auto max-w-screen-xl px-2 pb-6 sm:px-6 lg:px-4 lg:pb-16">
           <div className="mb-4">
-            <h1 className="text-4xl font-bold text-gray-600">
-              Machine Learning
-            </h1>
+            <h1 className="text-4xl font-bold text-gray-600">{course.name}</h1>
           </div>
           <div class="overflow-hidden rounded-lg bg-white shadow-lg border border-t-gray-200">
             <div class="divide-y divide-gray-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x">

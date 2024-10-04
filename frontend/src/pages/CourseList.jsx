@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/api";
+import useAuth from "../hooks/useAuth";
 
 const fetchCourses = async () => {
   try {
@@ -12,10 +13,22 @@ const fetchCourses = async () => {
 };
 
 const CourseList = () => {
+  const { user } = useAuth();
   const { data, isLoading, isError, error } = useQuery({
     queryFn: fetchCourses,
     queryKey: ["courses"],
   });
+  const navigate = useNavigate();
+  const handleCourseClick = async (course) => {
+    try {
+      const response = await axios.get(`enrollments/${course.id}/${user.id}`);
+      if (response.data) {
+        navigate(`${course.id}/learn`, { state: { course } });
+      }
+    } catch (error) {
+      navigate(`${course.id}`, { state: { course } });
+    }
+  };
   return (
     <>
       <div className="mt-16 bg-white h-screen">
@@ -31,6 +44,7 @@ const CourseList = () => {
                     <div
                       className="rounded overflow-hidden shadow-lg"
                       key={course.id}
+                      onClick={() => handleCourseClick(course)}
                     >
                       <a href="#"></a>
                       <div className="relative">
@@ -44,13 +58,9 @@ const CourseList = () => {
                         </a>
                       </div>
                       <div className="px-6 py-4">
-                        <Link
-                          to={course.id}
-                          state={course}
-                          className="font-semibold text-lg inline-block text-pink-800"
-                        >
+                        <h3 className="font-semibold text-lg inline-block text-pink-800">
                           {course.name}
-                        </Link>
+                        </h3>
                         <p className="text-gray-500 text-sm">
                           {course.description}
                         </p>

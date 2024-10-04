@@ -15,7 +15,7 @@ const enroll = async (data) => {
 
 const CourseDetail = () => {
   const location = useLocation();
-  const course = location.state;
+  const course = location.state.course;
   const { user } = useAuth();
   const navigate = useNavigate();
   const { mutateAsync: enrollmentMutation, isPending } = useMutation({
