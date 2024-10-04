@@ -7,10 +7,8 @@ import {
   getStatus,
   updateStatus,
   deleteStatus,
+  checkForEnrollment,
 } from "../services/enrollmentService.js";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 
 export const getEnrollmentController = async (req, res) => {
   try {
@@ -21,16 +19,42 @@ export const getEnrollmentController = async (req, res) => {
   }
 };
 
+export const getEnrollmentByCourseAndStudentController = async (req, res) => {
+  try {
+    const { courseId, studentId } = req.params;
+
+    if (courseId === undefined || studentId === undefined) {
+      return res.status(400).json({ message: "Missing courseId or studentId" });
+    }
+
+    const enrollment = await checkForEnrollment(courseId, studentId);
+    if (enrollment) {
+      return res.status(200).json(enrollment);
+    } else {
+      return res.status(404).json({ message: "Enrollment not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
 export const createEnrollmentController = async (req, res) => {
   try {
     const { courseId, studentId } = req.body;
-    if (!(courseId && studentId)) {
+    if (!courseId || !studentId) {
       return res
         .status(400)
-        .json({ message: "course and student ID not found" });
+        .json({ message: "Course ID and Student ID are required" });
     }
-    const status = await createStatus("pending");
+    const existingEnrollment = await checkForEnrollment(courseId, studentId);
+    if (existingEnrollment) {
+      return res
+        .status(400)
+        .json({ error: "Student is already enrolled in this course" });
+    }
 
+    const status = await createStatus("pending");
     const enrollment = await createEnrollment({
       data: {
         studentId,
@@ -44,6 +68,7 @@ export const createEnrollmentController = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 export const updateEnrollmentController = async (req, res) => {
   try {
     const data = req.body;

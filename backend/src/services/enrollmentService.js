@@ -19,6 +19,17 @@ export const deleteEnrollment = async (id) => {
   });
 };
 
+export const checkForEnrollment = (courseId, studentId) => {
+  return prisma.enrollment.findUnique({
+    where: {
+      studentId_courseId: {
+        studentId,
+        courseId,
+      },
+    },
+  });
+};
+
 // status services
 
 export const getStatus = async () => {

@@ -8,11 +8,16 @@ import {
   createStatusController,
   updateStatusController,
   deleteStatusController,
+  getEnrollmentByCourseAndStudentController,
 } from "../controllers/enrollmentController.js";
 
 const router = express.Router();
 
 router.get("/enrollments", getEnrollmentController);
+router.get(
+  "/enrollments/:courseId/:studentId",
+  getEnrollmentByCourseAndStudentController
+);
 router.post("/enrollments", createEnrollmentController);
 router.put("/enrollments/:id", updateEnrollmentController);
 router.delete("/enrollments/:id", deleteEnrollmentController);
