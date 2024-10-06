@@ -3,12 +3,34 @@ import {
   updateCourse,
   deleteCourse,
   createCourse,
+  getCourse,
+  getCourseModules,
 } from "../services/courseService.js";
 
 export const getCoursesController = async (req, res) => {
   try {
     const courses = await getAllCourses();
     return res.status(200).json(courses);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const getCourseController = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const course = await getCourse(id);
+    return res.status(200).json(course);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const getCourseModulesController = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const modules = await getCourseModules(id);
+    return res.status(200).json(modules);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }

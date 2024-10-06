@@ -96,7 +96,7 @@ model Module {
 model Lesson {
   id        String   @id @default(uuid())
   name      String
-  text      String
+  text      String?
   file      String?
   url       String?
   module    Module   @relation(fields: [moduleId], references: [id])

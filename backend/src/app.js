@@ -7,7 +7,7 @@ import userRouter from "./routes/userRoute.js";
 import authRouter from "./routes/authRoute.js";
 import courseRouter from "./routes/courseRoutes.js";
 import enrollmentRouter from "./routes/enrollmentsRoute.js";
-import { requireAuth } from "./middlewares/authMiddleware.js";
+import moduleLessonsRouter from "./routes/moduleLessonRoute.js";
 
 const app = express();
 const SQLiteStore = connectSQLite3(session);
@@ -38,5 +38,6 @@ app.use(userRouter);
 app.use(authRouter);
 app.use(courseRouter);
 app.use(enrollmentRouter);
+app.use(moduleLessonsRouter);
 
 export default app;

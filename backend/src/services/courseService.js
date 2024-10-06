@@ -6,6 +6,14 @@ export const getAllCourses = async () => {
   return await prisma.course.findMany();
 };
 
+export const getCourse = async (id) => {
+  return await prisma.course.findUnique({ where: { id } });
+};
+
+export const getCourseModules = async (id) => {
+  return await prisma.module.findMany({ where: { courseId: id } });
+};
+
 export const createCourse = async (data) => {
   return await prisma.course.create({ data });
 };
