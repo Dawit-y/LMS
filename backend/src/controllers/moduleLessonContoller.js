@@ -31,7 +31,7 @@ export const getModuleController = async (req, res) => {
 export const getModulesLessonsController = async (req, res) => {
   try {
     const id = req.params.id;
-    const lessons = await getModuleLessons();
+    const lessons = await getModuleLessons(id);
     return res.status(200).json(lessons);
   } catch (error) {
     return res.status(400).json(error);
