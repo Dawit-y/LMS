@@ -12,16 +12,6 @@ import moduleLessonsRouter from "./routes/moduleLessonRoute.js";
 const app = express();
 const SQLiteStore = connectSQLite3(session);
 
-//Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
-
 //session
 app.use(
   session({
@@ -29,7 +19,17 @@ app.use(
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    cookie: { secure: false, maxAge: 30 * 60 * 1000 },
+  })
+);
+
+//Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
   })
 );
 

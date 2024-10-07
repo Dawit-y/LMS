@@ -4,6 +4,11 @@ import {
   deleteUser,
   createUser,
   findUserByEmail,
+  findUserById,
+  getAllCreators,
+  updateCreator,
+  deleteCreator,
+  createCreator,
 } from "../services/userService.js";
 import bcrypt from "bcrypt";
 
@@ -52,6 +57,50 @@ export const deleteUserController = async (req, res) => {
   try {
     const userId = req.params.id;
     const user = await deleteUser(userId);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const getAllCreatorsController = async (req, res) => {
+  try {
+    const creators = await getAllCreators();
+    res.status(200).send(creators);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const createCreatorController = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = findUserById(userId);
+    if (!user) {
+      return res.status(404).json("User Not found");
+    }
+    const creator = await createCreator(req.body);
+    res.status(201).send(creator);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const updateCreatorController = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const data = req.body;
+    const user = await updateCreator(userId, data);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const deleteCreatorController = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await deleteCreator(userId);
     res.status(200).send(user);
   } catch (error) {
     res.status(500).send({ message: error.message });
