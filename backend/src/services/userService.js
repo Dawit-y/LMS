@@ -26,6 +26,34 @@ export const findUserById = async (id) => {
   return await prisma.user.findUnique({ where: { id: id } });
 };
 
+export const markLessonCompleted = async (userId, lessonId) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { completedLessons: true },
+    });
+
+    if (!user) {
+      return null;
+    }
+    const completedLessonsArray = user.completedLessons
+      ? user.completedLessons.split(",")
+      : [];
+    if (completedLessonsArray.includes(lessonId)) {
+      return null; 
+    }
+    completedLessonsArray.push(lessonId);
+    const updatedCompletedLessons = completedLessonsArray.join(",");
+    const updatedUser = await updateUser(userId, {
+      data: { completedLessons: updatedCompletedLessons },
+    });
+
+    return updatedUser;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 //creators
 
 export const getAllCreators = async () => {

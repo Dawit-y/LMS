@@ -9,6 +9,7 @@ import {
   updateCreator,
   deleteCreator,
   createCreator,
+  markLessonCompleted,
 } from "../services/userService.js";
 import bcrypt from "bcrypt";
 
@@ -60,6 +61,29 @@ export const deleteUserController = async (req, res) => {
     res.status(200).send(user);
   } catch (error) {
     res.status(500).send({ message: error.message });
+  }
+};
+
+export const markLessonCompletedController = async (req, res) => {
+  const { userId, lessonId } = req.body;
+  try {
+    const updatedUser = await markLessonCompleted(userId, lessonId);
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ message: "User not found or lesson already completed" });
+    }
+    res.status(200).json({
+      message: "Lesson marked as completed successfully",
+      completedLessons: updatedUser.completedLessons.split(","),
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Failed to mark lesson as completed",
+        error: error.message,
+      });
   }
 };
 
