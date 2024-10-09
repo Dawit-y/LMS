@@ -9,18 +9,17 @@ export const AuthProvider = ({ children }) => {
 
   const login = async ({ email, password }) => {
     try {
-      const response = await axios.post("login", {
-        email,
-        password,
-      });
+      const response = await axios.post("login", { email, password });
 
       if (response.status === 200) {
         console.log("Login successful");
         setUser(response.data);
+        setError(null); // Clear any previous errors
         return "success";
       }
     } catch (err) {
       setError("Invalid email or password");
+      console.error("Login error:", err); // Log full error for debugging
     }
   };
 
@@ -34,11 +33,9 @@ export const AuthProvider = ({ children }) => {
         setError(null);
       }
     } catch (err) {
-      console.log("error in logout");
+      console.error("Error during logout:", err);
     }
   };
-
-  const register = async () => {};
 
   useEffect(() => {
     const checkSession = async () => {
@@ -48,7 +45,8 @@ export const AuthProvider = ({ children }) => {
           setUser(response.data);
         }
       } catch (err) {
-        console.log("No active session");
+        console.log("No active session or error:", err);
+        setUser(null); // Clear user state if there is no session
       }
     };
 

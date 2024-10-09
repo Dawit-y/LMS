@@ -1,51 +1,41 @@
-import { authenticateUser } from "../services/authService.js";
-import { findUserById } from "../services/userService.js";
+import passport from "passport";
 
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await authenticateUser(email, password);
-
-    if (user) {
-      req.session.userId = user.id;
-
-      req.session.save((err) => {
-        if (err) {
-          return res.status(500).send("Session save failed.");
-        }
-        console.log("Session in login", req.session);
-        const { password: _, ...userWithoutPassword } = user;
-        return res.status(200).send(userWithoutPassword);
-      });
-    } else {
-      return res.status(400).send("Invalid email or password");
-    }
-  } catch (error) {
-    console.error("Login error:", error);
-    return res.status(500).send("An error occurred during login");
-  }
-};
-
-export const logout = async (req, res) => {
-  req.session.destroy((err) => {
+export const login = (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    console.log("user in login controller", user);
     if (err) {
-      return res.status(500).send({ message: "Failed to log out." });
+      return res.status(500).send("Internal Server Error");
     }
-    res.clearCookie("connect.sid");
-    res.status(200).send({ message: "Logged out successfully." });
+    if (!user) {
+      return res.status(401).send(info.message); // Invalid credentials
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        return res.status(500).send("Login failed");
+      }
+      // Exclude password from user object before sending
+      const { password, ...userWithoutPassword } = user;
+      return res.status(200).json(userWithoutPassword); // Send back user info
+    });
+  })(req, res, next);
+};
+export const logout = (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).send("Failed to log out.");
+    }
+
+    res.clearCookie("connect.sid"); // Clear session cookie
+    return res.status(200).send({ message: "Logged out successfully." });
   });
 };
 
-export const checkSession = async (req, res) => {
-  console.log("Session in checkSession", req.session);
-  if (req.session.userId) {
-    const user = await findUserById(req.session.userId);
-    if (user) {
-      const { password, ...userWithoutPassword } = user;
-      return res.status(200).json(userWithoutPassword);
-    } else {
-      return res.status(404).send("User not found");
-    }
+export const checkSession = (req, res) => {
+  if (req.isAuthenticated()) {
+    const { password, ...userWithoutPassword } = req.user;
+    return res.status(200).json(userWithoutPassword);
+  } else {
+    return res.status(401).send("Not authenticated");
   }
-  return res.status(401).send("Not authenticated");
 };
