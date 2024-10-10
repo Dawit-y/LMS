@@ -32,7 +32,6 @@ export const markLessonCompleted = async (userId, lessonId) => {
       where: { id: userId },
       select: { completedLessons: true },
     });
-
     if (!user) {
       return null;
     }
@@ -40,14 +39,13 @@ export const markLessonCompleted = async (userId, lessonId) => {
       ? user.completedLessons.split(",")
       : [];
     if (completedLessonsArray.includes(lessonId)) {
-      return null; 
+      return null;
     }
     completedLessonsArray.push(lessonId);
     const updatedCompletedLessons = completedLessonsArray.join(",");
     const updatedUser = await updateUser(userId, {
-      data: { completedLessons: updatedCompletedLessons },
+      completedLessons: updatedCompletedLessons,
     });
-
     return updatedUser;
   } catch (error) {
     throw new Error(error.message);
@@ -58,6 +56,10 @@ export const markLessonCompleted = async (userId, lessonId) => {
 
 export const getAllCreators = async () => {
   return await prisma.creator.findMany();
+};
+
+export const getCreatorByUserId = async (userId) => {
+  return await prisma.creator.findUnique({ where: { userId } });
 };
 
 export const createCreator = async (data) => {

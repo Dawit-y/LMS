@@ -10,6 +10,7 @@ import {
   deleteCreator,
   createCreator,
   markLessonCompleted,
+  getCreatorByUserId,
 } from "../services/userService.js";
 import bcrypt from "bcrypt";
 
@@ -78,12 +79,10 @@ export const markLessonCompletedController = async (req, res) => {
       completedLessons: updatedUser.completedLessons.split(","),
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Failed to mark lesson as completed",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Failed to mark lesson as completed",
+      error: error.message,
+    });
   }
 };
 
@@ -93,6 +92,19 @@ export const getAllCreatorsController = async (req, res) => {
     res.status(200).send(creators);
   } catch (error) {
     res.status(500).send({ message: error.message });
+  }
+};
+
+export const getCreatorByUserIdController = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const creator = await getCreatorByUserId(userId);
+    if (creator) {
+      return res.status(200).send(creator);
+    }
+    return res.status(404).send("There is no creator with the given user Id");
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
   }
 };
 

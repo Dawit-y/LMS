@@ -9,6 +9,7 @@ import {
   updateCreatorController,
   deleteCreatorController,
   markLessonCompletedController,
+  getCreatorByUserIdController,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -20,6 +21,7 @@ router.delete("/users/:id", deleteUserController);
 router.post("/markLessonCompleted", markLessonCompletedController);
 
 router.get("/creators", getAllCreatorsController);
+router.get("/creators/user/:id", getCreatorByUserIdController);
 router.post("/creators", createCreatorController);
 router.put("/creators/:id", updateCreatorController);
 router.delete("/creators/:id", deleteCreatorController);

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 import axios from "../api/api";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const fetchCourse = async (courseId) => {
   try {
@@ -21,6 +22,7 @@ const fetchCourseModules = async (courseId) => {
 };
 
 const LearnDashbaord = () => {
+  const { user } = useAuth();
   const { id: courseId } = useParams();
   const courseQuery = useQuery({
     queryKey: ["course", courseId],
@@ -35,6 +37,18 @@ const LearnDashbaord = () => {
   const handleLessonSelect = (lesson) => {
     setLesson(lesson);
   };
+  const MarkAsCompleted = async ({ lessonId, userId }) => {
+    try {
+      const res = await axios.post("markLessonCompleted", { lessonId, userId });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const markLessonMutation = useMutation({
+    mutationKey: ["markLessonCompleted"],
+    mutationFn: MarkAsCompleted,
+  });
+
   return (
     <>
       <div class="mt-24">
@@ -72,6 +86,22 @@ const LearnDashbaord = () => {
                     </div>
                   )}
                 </div>
+
+                {lesson && (
+                  <div className="h-auth w-full flex items-center justify-end">
+                    <button
+                      onClick={async () =>
+                        markLessonMutation.mutateAsync({
+                          lessonId: lesson.id,
+                          userId: user.id,
+                        })
+                      }
+                      className="px-4 py-2 bg-teal-50 text-teal-700 font-semibold self-center rounded-md mr-2 mt-2"
+                    >
+                      Mark As Completed
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

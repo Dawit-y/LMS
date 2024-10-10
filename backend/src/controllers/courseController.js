@@ -49,7 +49,15 @@ export const updateCourseController = async (req, res) => {
 
 export const createCourseController = async (req, res) => {
   try {
-    const data = req.body;
+    const { name, description, image, creatorId } = req.body;
+    const imageUrl = typeof image === "string" ? image : image.url;
+
+    const data = {
+      name,
+      description,
+      image: imageUrl || null,
+      creatorId,
+    };
     const course = await createCourse(data);
     return res.status(200).json(course);
   } catch (error) {
