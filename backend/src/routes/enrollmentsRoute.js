@@ -9,11 +9,13 @@ import {
   updateStatusController,
   deleteStatusController,
   getEnrollmentByCourseAndStudentController,
+  getEnrollmentByUserIdController,
 } from "../controllers/enrollmentController.js";
 
 const router = express.Router();
 
 router.get("/enrollments", getEnrollmentController);
+router.get("/enrollments/students/:studentId", getEnrollmentByUserIdController);
 router.get(
   "/enrollments/:courseId/:studentId",
   getEnrollmentByCourseAndStudentController

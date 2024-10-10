@@ -5,6 +5,10 @@ const prisma = new PrismaClient();
 export const getAllEnrollment = async () => {
   return await prisma.enrollment.findMany();
 };
+
+export const getEnrollmentByUserId = async (studentId) => {
+  return await prisma.enrollment.findMany({ where: { studentId } });
+};
 export const createEnrollment = async (data) => {
   return await prisma.enrollment.create(data);
 };

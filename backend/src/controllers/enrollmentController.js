@@ -8,12 +8,22 @@ import {
   updateStatus,
   deleteStatus,
   checkForEnrollment,
+  getEnrollmentByUserId,
 } from "../services/enrollmentService.js";
 
 export const getEnrollmentController = async (req, res) => {
   try {
     const enrollments = await getAllEnrollment();
     return res.status(200).json(enrollments);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+export const getEnrollmentByUserIdController = async (req, res) => {
+  try {
+    const studentId = req.params.studentId;
+    const enrollment = await getEnrollmentByUserId(studentId);
+    return res.status(200).json(enrollment);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -37,7 +47,6 @@ export const getEnrollmentByCourseAndStudentController = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 
 export const createEnrollmentController = async (req, res) => {
   try {

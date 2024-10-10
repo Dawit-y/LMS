@@ -74,7 +74,7 @@ const DropdownMenu = () => {
               data-original="#000000"
             ></path>
           </svg>
-          <Link to="#"> My Learnings</Link>
+          <Link to="mylearnings"> My Learnings</Link>
         </li>
         <li
           onClick={toggleDropdown}
