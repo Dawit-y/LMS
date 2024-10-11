@@ -78,15 +78,31 @@ export const getAllLessonController = async (req, res) => {
   }
 };
 
+// Update the controller to handle file uploads
 export const createLessonsController = async (req, res) => {
   try {
-    const data = req.body;
-    const lesson = await createLesson(data);
+    const { name, url, text, moduleId } = req.body;
+    let file = null;
+    
+    if (req.file) {
+      file = req.file.path; // Get the file path
+    }
+
+    const lesson = await createLesson({
+      name,
+      url,
+      text,
+      file, // Store file path
+      moduleId,
+    });
+
     return res.status(201).json(lesson);
   } catch (error) {
     return res.status(400).json(error);
   }
 };
+
+
 
 export const updateLessonsController = async (req, res) => {
   try {

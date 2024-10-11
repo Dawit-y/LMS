@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import useAuth from "../hooks/useAuth";
 import axios from "../api/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import ModuleInput from "../components/ModuleInput";
 import ModuleDropdown from "../components/ModuleDropdown";
+import LessonForm from "../components/LessonForm";
 
 const createCourse = async (courseData) => {
   const res = await axios.post("/courses", courseData);
@@ -13,7 +14,7 @@ const createCourse = async (courseData) => {
 };
 
 const CreatorDashboard = () => {
-  const [modules, setModules] = useState([]); // Store created modules
+  const [selectedModule, setSelectedModule] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [creatorId, setCreatorId] = useState(null);
   const [course, setCourse] = useState(null);
@@ -39,31 +40,35 @@ const CreatorDashboard = () => {
     }
   }, [user]);
 
-  const addModuleToSidebar = (newModule) => {
-    setModules((prevModules) => [...prevModules, newModule]);
-  };
-
-  const addDropdown = () => {
-    setModules((prevModules) => [
-      ...prevModules,
-      <ModuleInput
-        key={prevModules.length}
-        courseId={course.id}
-        onModuleAdded={addModuleToSidebar}
-      />,
-    ]);
-  };
-
-  // Mutation for creating a course
   const courseMutation = useMutation({
+    mutationKey: ["createCourse"],
     mutationFn: createCourse,
-    onSuccess: (data) => {
-      setCourse(data); // Store course data after successful creation
-    },
-    onError: (error) => {
-      console.error("Error creating course:", error);
-    },
   });
+
+  const modulesQuery = useQuery({
+    queryKey: ["courseModules", { courseId: course?.id }],
+    queryFn: async ({ queryKey }) => {
+      const courseId = queryKey[1].courseId;
+      const res = await axios.get(`/courses/${courseId}/modules`);
+      return res.data;
+    },
+    enabled: !!course,
+  });
+
+  useEffect(() => {
+    if (courseMutation.isSuccess) {
+      setCourse(courseMutation.data);
+    }
+
+    if (courseMutation.isError) {
+      console.error("Error creating course:", courseMutation.error);
+    }
+  }, [
+    courseMutation.isSuccess,
+    courseMutation.isError,
+    courseMutation.data,
+    courseMutation.error,
+  ]);
 
   const handleCourseSubmit = (e) => {
     e.preventDefault();
@@ -74,7 +79,7 @@ const CreatorDashboard = () => {
       image: formData.get("thumbnail"),
       creatorId: creatorId,
     };
-    courseMutation.mutate(courseData); // Submit form data
+    courseMutation.mutate(courseData);
   };
 
   return (
@@ -123,9 +128,9 @@ const CreatorDashboard = () => {
                 <button
                   type="submit"
                   className="mt-4 px-6 py-2.5 text-sm bg-teal-600 hover:bg-teal-200 text-white rounded-lg"
-                  disabled={courseMutation.isLoading}
+                  disabled={courseMutation.isPending}
                 >
-                  {courseMutation.isLoading ? "Saving..." : "Save"}
+                  {courseMutation.isPending ? "Saving..." : "Save"}
                 </button>
               </form>
             </div>
@@ -153,29 +158,23 @@ const CreatorDashboard = () => {
             >
               <div className="divide-y divide-gray-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x">
                 <aside className="py-2 lg:col-span-3">
-                  <div
-                    className="bg-teal-50 border-teal-500 text-teal-700 hover:bg-teal-50 hover:text-teal-700 group border-l-4 px-3 py-4 flex items-center justify-center text-sm font-medium cursor-pointer mb-2"
-                    onClick={addDropdown}
-                  >
-                    <span>Add New Module +</span>
+                  <div className="bg-teal-50 border-teal-500 text-teal-700 hover:bg-teal-50 hover:text-teal-700 group border-l-4 px-3 py-2 flex items-center justify-center text-sm font-medium mb-2">
+                    <ModuleInput courseId={course.id} />
                   </div>
                   <div className="space-y-1">
-                    {modules.map((module, index) => (
-                      <ModuleDropdown key={index} module={module} />
+                    {modulesQuery?.data?.map((module, index) => (
+                      <ModuleDropdown
+                        key={index}
+                        module={module}
+                        setSelectedModule={setSelectedModule}
+                      />
                     ))}
                   </div>
                 </aside>
 
                 <div className="divide-y divide-gray-200 lg:col-span-9 h-screen">
                   <div className="py-6 px-4 sm:p-6 lg:pb-8">
-                    <div>
-                      <h2 className="text-lg font-medium leading-6 text-gray-900">
-                        Title of the Lesson
-                      </h2>
-                      <p className="mt-1 text-sm text-gray-500">
-                        Content of the Lesson
-                      </p>
-                    </div>
+                    <LessonForm selectedModule={selectedModule} />
                   </div>
                 </div>
               </div>

@@ -1,11 +1,21 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import axios from "../api/api";
 
-const ModuleDropdown = ({ module }) => {
+const ModuleDropdown = ({ module, setSelectedModule }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleLessons = () => {
     setIsOpen(!isOpen);
   };
+
+  const moduleLessonsQuery = useQuery({
+    queryKey: ["moduleLessons", module.id],
+    queryFn: async () => {
+      const res = await axios.get(`/modules/${module.id}/lessons`);
+      return res.data;
+    },
+    staleTime: 0,
+  });
 
   return (
     <div>
@@ -14,50 +24,35 @@ const ModuleDropdown = ({ module }) => {
         onClick={toggleLessons}
       >
         <span className="truncate">{module.name}</span>
-        {isOpen ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m4.5 15.75 7.5-7.5 7.5 7.5"
-            />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m19.5 8.25-7.5 7.5-7.5-7.5"
-            />
-          </svg>
-        )}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className={`size-6 transition-transform duration-300 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+          />
+        </svg>
       </div>
 
       {/* Lessons List */}
       {isOpen && (
         <ul className="pl-6 mt-2 space-y-2 transition-all duration-300 ease-in-out overflow-hidden">
-          <li className="text-sm text-gray-700 h-8 mb-1 mr-1 bg-gray-200 rounded-sm flex items-center justify-start px-2 py-1 hover:bg-gray-100 transition-colors ease-in-out delay-75">
-            Something In ethiopia
-          </li>
-          <li className="text-sm text-gray-700 h-8 mb-1 mr-1 bg-gray-200 rounded-sm flex items-center justify-start px-2 py-1 hover:bg-gray-100 transition-colors ease-in-out delay-75">
-            Something In ethiopia
-          </li>
-          <li className="text-sm text-gray-700 h-8 mb-1 mr-1 bg-gray-200 rounded-sm flex items-center justify-start px-2 py-1 hover:bg-gray-100 transition-colors ease-in-out delay-75">
-            Something In ethiopia
+          {moduleLessonsQuery?.data?.map((lesson, index) => (
+            <LessonElement key={index} lesson={lesson} />
+          ))}
+          <li
+            onClick={() => setSelectedModule(module)}
+            className="text-sm text-white font-bold h-8 mb-1 mr-1 bg-teal-500 rounded-lg flex items-center justify-center p-4 hover:bg-teal-400 transition-colors ease-in-out delay-75 cursor-pointer"
+          >
+            Add Lesson
           </li>
         </ul>
       )}
@@ -66,3 +61,11 @@ const ModuleDropdown = ({ module }) => {
 };
 
 export default ModuleDropdown;
+
+const LessonElement = ({ lesson }) => {
+  return (
+    <li className="text-sm text-teal-700 font-bold h-8 mb-1 mr-1 bg-teal-100 rounded-sm flex items-center justify-start px-2 py-1 hover:bg-teal-50 transition-colors ease-in-out delay-75 cursor-pointer">
+      {lesson.name}
+    </li>
+  );
+};

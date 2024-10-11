@@ -62,7 +62,7 @@ model Course {
   modules     Module[]
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
-  creator     Creator?     @relation(fields: [creatorId], references: [id])
+  creator     Creator?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
   creatorId   String?
 
   @@map("courses")
@@ -72,10 +72,10 @@ model Enrollment {
   id        Int      @id @default(autoincrement())
   studentId String
   courseId  String
-  student   User     @relation(fields: [studentId], references: [id])
-  course    Course   @relation(fields: [courseId], references: [id])
+  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
-  status    Status?  @relation(fields: [statusId], references: [id])
+  status    Status?  @relation(fields: [statusId], references: [id], onDelete: SetNull)
   statusId  Int?
 
   @@unique([studentId, courseId])
@@ -85,7 +85,7 @@ model Enrollment {
 model Module {
   id        String   @id @default(uuid())
   name      String
-  course    Course   @relation(fields: [courseId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId  String
   lessons   Lesson[]
   createdAt DateTime @default(now()) @map("created_at")
@@ -100,7 +100,7 @@ model Lesson {
   text      String?
   file      String?
   url       String?
-  module    Module   @relation(fields: [moduleId], references: [id])
+  module    Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   moduleId  String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

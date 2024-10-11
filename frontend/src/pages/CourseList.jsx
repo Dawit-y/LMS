@@ -3,6 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/api";
 import useAuth from "../hooks/useAuth";
 
+const truncateText = (text, maxLength = 150) => {
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength)}...`;
+};
+
 const fetchCourses = async () => {
   try {
     const res = await axios.get("courses");
@@ -31,7 +36,7 @@ const CourseList = () => {
   };
   return (
     <>
-      <div className="mt-16 bg-white h-screen">
+      <div className="mt-16 bg-white h-auto min-h-screen">
         <div className="px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center ">
           <h1 className="text-4xl font-light text-black mx-auto mt-5">
             All Courses
@@ -62,7 +67,7 @@ const CourseList = () => {
                           {course.name}
                         </h3>
                         <p className="text-gray-500 text-sm">
-                          {course.description}
+                          {truncateText(course.description, 150)}
                         </p>
                       </div>
                       <div className="px-6 py-4 flex flex-row items-center">

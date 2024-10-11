@@ -19,7 +19,6 @@ import { AuthProvider } from "./context/AuthContext";
 import CourseDetail from "./pages/CourseDetail";
 import CourseList from "./pages/CourseList";
 import ErrorElement from "./pages/ErrorElement";
-import MyLearnings from "./pages/MyLearnings";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +41,6 @@ function App() {
             </Route>
           </Route>
           <Route path="create" element={<CreatorDashboard />} />
-          <Route path="mylearnings" element={<MyLearnings />} />
         </Route>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
