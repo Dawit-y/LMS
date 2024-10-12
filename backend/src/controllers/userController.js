@@ -11,6 +11,7 @@ import {
   createCreator,
   markLessonCompleted,
   getCreatorByUserId,
+  getCreatorCourses,
 } from "../services/userService.js";
 import bcrypt from "bcrypt";
 
@@ -101,6 +102,19 @@ export const getCreatorByUserIdController = async (req, res) => {
     const creator = await getCreatorByUserId(userId);
     if (creator) {
       return res.status(200).send(creator);
+    }
+    return res.status(404).send("There is no creator with the given user Id");
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+export const getCreatorCoursesController = async (req, res) => {
+  try {
+    const creatorId = req.params.id;
+    const courses = await getCreatorCourses(creatorId);
+    if (courses) {
+      return res.status(200).send(courses);
     }
     return res.status(404).send("There is no creator with the given user Id");
   } catch (error) {

@@ -61,6 +61,9 @@ export const getAllCreators = async () => {
 export const getCreatorByUserId = async (userId) => {
   return await prisma.creator.findUnique({ where: { userId } });
 };
+export const getCreatorCourses = async (userId) => {
+  return await prisma.course.findMany({ where: { creatorId: userId } });
+};
 
 export const createCreator = async (data) => {
   return await prisma.creator.create({ data });

@@ -34,6 +34,9 @@ const CourseList = () => {
       navigate(`${course.id}`, { state: { course } });
     }
   };
+  {
+    isError && <div>Error occured while fetching courses</div>;
+  }
   return (
     <>
       <div className="mt-16 bg-white h-auto min-h-screen">
@@ -45,7 +48,7 @@ const CourseList = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-10">
               {isLoading
                 ? "Loading Courses..."
-                : data.map((course) => (
+                : data?.map((course) => (
                     <div
                       className="rounded overflow-hidden shadow-lg"
                       key={course.id}

@@ -3,9 +3,11 @@ import useAuth from "../hooks/useAuth";
 const MyLearnings = () => {
   const { user } = useAuth();
   return (
-    <div className="mt-1">
-      <h1 className="p-3 text-xl text-gray-800">My Learnings</h1>
-      <div className="bg-white grid sm:grid-cols-2 h-48 items-center shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-sm:max-w-sm rounded-lg font-[sans-serif] overflow-hidden mx-auto m-4 ml-5 mr-5 ">
+    <div className="mt-1 w-full py-2">
+      <h1 className="text-3xl text-gray-800 mx-auto w-full my-4">
+        My Learnings
+      </h1>
+      <div className="bg-white grid sm:grid-cols-2 h-48 items-center shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-sm:max-w-sm rounded-lg font-[sans-serif] overflow-hidden mx-auto mb-2">
         <div className="min-h-[280px] h-full">
           <img
             src="https://readymadeui.com/cardImg.webp"
