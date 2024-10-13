@@ -7,7 +7,10 @@ export const getAllCourses = async () => {
 };
 
 export const getCourse = async (id) => {
-  return await prisma.course.findUnique({ where: { id } });
+  return await prisma.course.findUnique({
+    where: { id },
+    include: { modules: true },
+  });
 };
 
 export const getCourseModules = async (id) => {

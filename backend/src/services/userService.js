@@ -62,7 +62,10 @@ export const getCreatorByUserId = async (userId) => {
   return await prisma.creator.findUnique({ where: { userId } });
 };
 export const getCreatorCourses = async (userId) => {
-  return await prisma.course.findMany({ where: { creatorId: userId } });
+  return await prisma.course.findMany({
+    where: { creatorId: userId },
+    include: { modules: true },
+  });
 };
 
 export const createCreator = async (data) => {
